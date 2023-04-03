@@ -1,0 +1,120 @@
+#GridLayout, TextInput itd. are objects from kivy classes, 
+#LoginScreen and Rootwidget are objects represented by classed which we declared in python
+
+
+<LoginScreen>:
+    GridLayout:  
+        cols:1
+        GridLayout:  
+            cols:1
+            padding: 15,15 #distance between gridlayout borders and widgets, external
+            spacing: 20,20 #distance between widgets, internal
+            Label: 
+                text: "User Login"
+                font_size: '20sp'
+            TextInput:  
+                id: username
+                hint_text: "Username"
+            TextInput: 
+                id: password
+                password: True #password is hidden with stars
+                hint_text: "Password"
+            RelativeLayout: #necessary to adjust button dimensions, without it button takes all the gridlayout width
+                Button: 
+                    text: "Login"
+                    on_press: root.login(root.ids.username.text, root.ids.password.text)
+                    size_hint: 0.3, 0.5 # button size -> fraction of all available width, fraction of all available height
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5} #centering the button
+            Label:
+                id: wrong_login
+                text: ""
+        
+        GridLayout:
+            cols:2
+            size_hint: 0.2, 0.2 #size of this gridlayout takes now 20% of the overall grid
+            padding: 10, 10
+            spacing: 10, 10
+            Button: 
+                text: "Forgot Password"
+                on_press: root.clear_label()
+                background_color: 1,1,1,0 #transparent
+                opacity: 1 if self.state == 'normal' else 0.5 # zmiana przezroczystosci przy kliknieciu, self odnosi sie do widgetu Button, inaczej jak root odnosilo sie do do calego GridLayout
+                color: 0.1, 0.7, 1, 1
+            Button:
+                text: "Sign Up"
+                on_press: root.clear_label()
+                on_press: root.sign_up() #root refers to the class of the rule widget (LoginScreen), so te LoginScreen class in Python
+                background_color: 1,1,1,0 
+                opacity: 1 if self.state == 'normal' else 0.5 
+                color: 0.1, 0.7, 1, 1
+
+<SignUpScreen>:
+    GridLayout:
+        cols:1
+        Label:
+            text:"Welcome to the App !!"
+        TextInput:
+            id: username
+            hint_text: "Username"
+        TextInput:
+            id: password
+            hint_text: "Password" 
+        Button:
+            text: "Sign up !"
+            on_press: root.add_user(root.ids.username.text, root.ids.password.text)
+
+<SignUpScreenSuccess>:
+    GridLayout:
+        cols:1
+        Label: 
+            text: "Sign Up Successful!"
+        Button:
+            text: "Login page"
+            on_press: root.go_to_login_screen()
+
+<AppScreen>:
+    GridLayout:
+        cols:1
+        padding: 20,20
+        spacing: 20,20
+        Label:
+            text: "How do you feel?"
+        TextInput:
+            id: feeling
+            hint_text: "Type happy, sad or unloved ..."
+        RelativeLayout:
+            Button:
+                text: "Enlighten me!"
+                on_press: root.get_quote(root.ids.feeling.text)
+                size_hint: 0.4, 0.5 # button size -> fraction of all available width, fraction of all available height
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5} #centering the button
+        ScrollView: #to have scrolldown feature
+            Label:
+                id: requested_quote
+                text: ""
+                text_size: self.width, None #text width will resize to label size 
+                size_hint_y: None #height has no limits (could be bigger than label)
+                height: self.texture_size[1]
+        Button:
+            size_hint: 0.4, 0.7
+            text: "Log Out"
+            on_press: root.log_out()
+            background_color: 1,1,1,0 
+            opacity: 1 if self.state == 'normal' else 0.5 
+            color: 0.1, 0.7, 1, 1
+
+
+#background widget necessary for backend logic
+#LoginScreen is a child of RootWidget
+
+<RootWidget>:
+    LoginScreen:
+        name: "login_screen"
+    SignUpScreen:
+        name: "sign_up_screen"
+    SignUpScreenSuccess:
+        name: "sign_up_screen_success"
+    AppScreen:
+        name: "app_screen"
+
+
